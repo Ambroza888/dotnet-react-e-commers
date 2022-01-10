@@ -9,13 +9,21 @@ function App() {
   const paletteType = darkMode ? 'dark' : 'light';
   const theme = createTheme({
     palette: {
-      mode: paletteType
+      mode: paletteType,
+      background: {
+        default: paletteType === 'light' ? '#eaeaea' : '#121212'
+      }
     }
   })
+
+  function handleThemeChange() {
+    setDarkMode(!darkMode);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header />
+      <Header handleThemeChange={handleThemeChange} darkMode={darkMode}/>
       <Container>
         <Catalog />
       </Container>
