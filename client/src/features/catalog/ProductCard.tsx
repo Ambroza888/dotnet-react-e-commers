@@ -12,33 +12,46 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
 import { Product } from "../../app/models/product";
+import { useAppDispatch } from "../../app/store/configureStore";
 import { currencyFormat } from "../../app/util/util";
+import { setBasket } from "../basket/basketSlice";
+
 interface Props {
   product: Product;
 }
+
 export default function ProductCard({ product }: Props) {
   const [loading, setLoading] = useState(false);
-  const { setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
 
   const handleAddItem = (productId: number) => {
     setLoading(true);
     agent.Basket.addItem(productId)
-       .then(basket => setBasket(basket))
-       .catch(error => console.log(error))
-       .finally(() => setLoading(false));
-  }
+      .then((basket) => dispatch(setBasket(basket)))
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
+  };
 
   return (
     <Card>
       <CardHeader
-        avatar={<Avatar sx={{bgcolor: 'secondary.main'}}>{product.name.charAt(0).toUpperCase()}</Avatar>}
+        avatar={
+          <Avatar sx={{ bgcolor: "secondary.main" }}>
+            {product.name.charAt(0).toUpperCase()}
+          </Avatar>
+        }
         title={product.name}
-        titleTypographyProps={{sx: {fontWeight: 'bold', color: 'primary.main'}}}
+        titleTypographyProps={{
+          sx: { fontWeight: "bold", color: "primary.main" },
+        }}
       />
       <CardMedia
-        sx={{ height: 140, backgroundSize: "contain", bgcolor: 'primary.light' }}
+        sx={{
+          height: 140,
+          backgroundSize: "contain",
+          bgcolor: "primary.light",
+        }}
         image={product.pictureUrl}
         title={product.name}
       />
@@ -51,13 +64,16 @@ export default function ProductCard({ product }: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <LoadingButton 
-          loading={loading} 
-          onClick={() => handleAddItem(product.id)} 
-          size="small" >
-            Add to Cart
+        <LoadingButton
+          loading={loading}
+          onClick={() => handleAddItem(product.id)}
+          size="small"
+        >
+          Add to Cart
         </LoadingButton>
-        <Button component={Link} to={`/catalog/${product.id}`} size="small">View</Button>
+        <Button component={Link} to={`/catalog/${product.id}`} size="small">
+          View
+        </Button>
       </CardActions>
     </Card>
   );
