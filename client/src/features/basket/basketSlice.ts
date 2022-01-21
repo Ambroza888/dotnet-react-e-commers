@@ -3,10 +3,12 @@ import { Basket } from "../../app/models/basket";
 
 interface BasketState {
   basket: Basket | null;
+  status: string;
 }
 
 const initialState: BasketState = {
   basket: null,
+  status: 'idle'
 };
 
 export const basketSlice = createSlice({
