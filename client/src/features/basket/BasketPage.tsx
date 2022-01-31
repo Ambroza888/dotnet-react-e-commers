@@ -13,12 +13,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import agent from "../../app/api/agent";
 import { BasketItem } from "../../app/models/basket";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { addBasketItemAsync, removeBasketItemAsync, setBasket } from "./basketSlice";
+import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 import BasketSummary from "./BasketSummary";
 
 export default function BasketPage() {
@@ -63,7 +61,7 @@ export default function BasketPage() {
                 <TableCell align="center">
                   <LoadingButton
                     loading={ status === 'pendingRemoveItem' + item.productId + 'rem'}
-                    onClick={ () => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: 1, name:'rem' }))}
+                    onClick={ () => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: 1, name: 'rem' }))}
                     color="error"
                   >
                     <Remove />
@@ -83,7 +81,7 @@ export default function BasketPage() {
                 <TableCell align="right">
                   <LoadingButton
                     loading={ status === 'pendingRemoveItem' + item.productId + 'del'}
-                    onClick={ () => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: item.quantity, name:'del' }))}
+                    onClick={ () => dispatch(removeBasketItemAsync({ productId: item.productId, quantity: item.quantity, name: 'del' }))}
                     color="error"
                   >
                     <Delete />

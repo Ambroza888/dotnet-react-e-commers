@@ -26,7 +26,6 @@ export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
   const item = basket?.items.find((i) => i.productId === product?.id);
 
   useEffect(() => {
@@ -44,7 +43,6 @@ export default function ProductDetails() {
   }
 
   function handleUpdateCart() {
-    setSubmitting(true);
     if (!item || quantity > item.quantity) {
       const updatedQuantity = item ? quantity - item.quantity : quantity;
       dispatch(addBasketItemAsync({productId: product?.id!, quantity: updatedQuantity}))
@@ -111,9 +109,9 @@ export default function ProductDetails() {
           </Grid>
           <Grid item xs={6}>
             <LoadingButton
-              disabled={item?.quantity === quantity || (!item && quantity === 0)}
-              loading={status.includes('pending' + item?.productId)}
-              onClick={handleUpdateCart}
+              disabled={ item?.quantity === quantity || (!item && quantity === 0) }
+              loading={ status === 'pendingAddItem' + item?.productId }
+              onClick={ handleUpdateCart }
               sx={{ height: "55px" }}
               color="primary"
               size="large"
