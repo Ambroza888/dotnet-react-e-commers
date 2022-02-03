@@ -22,9 +22,9 @@ export const addBasketItemAsync = createAsyncThunk<Basket, { productId: number; 
     }
 });
 
-export const removeBasketItemAsync = createAsyncThunk<void, {productId: number, quantity: number, name?: string}>(
+export const removeBasketItemAsync = createAsyncThunk<void, { productId: number, quantity: number, name?: string }>(
   "basket/removeBasketItemAsync",
-  async ({productId, quantity}) => {
+  async ({ productId, quantity }) => {
     try {
       await agent.Basket.removeItem(productId, quantity);
     } catch (err) {
@@ -57,9 +57,7 @@ export const basketSlice = createSlice({
     })
     builder.addCase(removeBasketItemAsync.fulfilled,(state, action) => {
       const { productId, quantity } = action.meta.arg;
-      const itemIndex = state.basket?.items.findIndex(
-        (i) => i.productId === productId
-      );
+      const itemIndex = state.basket?.items.findIndex(i => i.productId === productId);
       if (itemIndex === -1 || itemIndex === undefined) return;
       state.basket!.items[itemIndex].quantity -= quantity;
       if (state.basket!.items[itemIndex].quantity < 1)
