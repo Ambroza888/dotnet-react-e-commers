@@ -27,11 +27,25 @@ export const fetchProductAsync = createAsyncThunk<Product, number>(
     }
 )
 
+export const fetchFiltersAsync = createAsyncThunk(
+    'catalog/fetchFilters',
+    async (_, thunkAPI) => {
+        try {
+            return agent.Catalog.fetchFilters();
+        } catch (err: any) {
+            return thunkAPI.rejectWithValue({ error: err.data });
+        }
+    }
+)
+
 export const catalogSlise = createSlice({
     name: 'catalog',
     initialState: productsAdapter.getInitialState({
         productsLoaded: false,
-        status: 'idle'
+        filtersLoaded: false,
+        status: 'idle',
+        brands: [],
+        types: [],
     }),
     reducers: {},
     extraReducers: (builder => {
@@ -42,21 +56,34 @@ export const catalogSlise = createSlice({
             productsAdapter.setAll(state, action.payload);
             state.status = 'idle';
             state.productsLoaded = true;
-        })
+        });
         builder.addCase(fetchProductsAsync.rejected, (state, action) => {
             state.status = 'idle';
             console.log(action.payload);
-        })
+        });
         builder.addCase(fetchProductAsync.pending, (state) => {
             state.status = 'pendingFetchProduct';
-        })
+        });
         builder.addCase(fetchProductAsync.fulfilled, (state, action) => {
             productsAdapter.upsertOne(state, action.payload);
             state.status = 'idle';
-        })
+        });
         builder.addCase(fetchProductAsync.rejected, (state, action) => {
             console.log(action);
             state.status = 'idle';
+        });
+        builder.addCase(fetchFiltersAsync.pending, (state) => {
+            state.status = 'pendingFetchFilters';
+        });
+        builder.addCase(fetchFiltersAsync.fulfilled, (state, action) => {
+            state.brands = action.payload.brands;
+            state.types = action.payload.types;
+            state.filtersLoaded = true;
+            state.status = 'idle';
+        });
+        builder.addCase(fetchFiltersAsync.rejected, (state, action) => {
+            state.status = 'idle';
+            console.log(action.payload);
         })
     })
 })
