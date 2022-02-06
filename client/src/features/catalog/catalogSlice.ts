@@ -61,7 +61,7 @@ export const fetchFiltersAsync = createAsyncThunk(
 
 const initiParams = () => {
     return {
-        pageNumber: 2,
+        pageNumber: 1,
         pageSize: 6,
         orderBy: 'name'
     }
