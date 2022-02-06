@@ -8,7 +8,7 @@ export default function ProductSearch() {
   const [searchTerm, setSearchTerm] = useState(productParams.searchTerm);
   const dispatch = useAppDispatch();
 
-  const debounceSearch = debounce((event: any) => {
+  const debounceSearch = debounce((event) => {
     dispatch(setProductParams({ searchTerm: event.target.value }));
   }, 1000);
 
