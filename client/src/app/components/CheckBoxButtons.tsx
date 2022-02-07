@@ -22,7 +22,7 @@ export default function CheckBoxButtons({ items, checked, onChange }: Props) {
     <FormGroup>
       {items.map((item) => (
         <FormControlLabel 
-            control={<Checkbox 
+                control={<Checkbox 
                 checked={checkedItems.indexOf(item) !== -1}
                 onClick={() => handleChecked(item)}
             />} 
