@@ -28,7 +28,8 @@ export default function CheckBoxButtons({ items, checked, onChange }: Props) {
                     onClick={() => handleChecked(item)}
                 />} 
                 label={item} 
-                key={item} />
+                key={item} 
+            />
       ))}
     </FormGroup>
   );
