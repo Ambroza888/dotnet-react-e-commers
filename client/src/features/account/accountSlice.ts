@@ -26,7 +26,7 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
 )
 
 export const fetchCurrentUser = createAsyncThunk<User>(
-    'account/currentUser',
+    'account/fetchCurrentUser',
     async (_, thunkAPI) => {
         try {
             const user = await agent.Account.currentUser();
