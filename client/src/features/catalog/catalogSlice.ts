@@ -74,7 +74,7 @@ const initiParams = () => {
     }
 } 
 
-export const catalogSlise = createSlice({
+export const catalogSlice = createSlice({
     name: 'catalog',
     initialState: productsAdapter.getInitialState<CatalogState>({
         productsLoaded: false,
@@ -142,4 +142,4 @@ export const catalogSlise = createSlice({
 })
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.catalog);
-export const { setProductParams, resetProductParams, setMetaData, setPageNumber } = catalogSlise.actions;
+export const { setProductParams, resetProductParams, setMetaData, setPageNumber } = catalogSlice.actions;
