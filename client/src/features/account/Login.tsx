@@ -53,8 +53,8 @@ export default function Login() {
               error={!!errors.password}
               helperText={errors?.password?.message}
             />
-            <LoadingButton loading={isSubmitting}
-              disabled={!isValid}
+            <LoadingButton loading={ isSubmitting }
+              disabled={ !isValid }
               type="submit"
               fullWidth
               variant="contained"
