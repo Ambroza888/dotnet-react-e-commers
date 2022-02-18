@@ -28,13 +28,13 @@ export default function SignedInMenu() {
             { user?.email }
         </Button>
         <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Fade}
+          anchorEl={ anchorEl }
+          open={ open }
+          onClose={ handleClose }
+          TransitionComponent={ Fade }
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My Orders</MenuItem>
+          <MenuItem onClick={ handleClose }>Profile</MenuItem>
+          <MenuItem onClick={ handleClose }>My Orders</MenuItem>
           <MenuItem onClick={() => dispatch(signOut())}>Logout</MenuItem>
         </Menu>
       </>
