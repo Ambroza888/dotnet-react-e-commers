@@ -64,14 +64,16 @@ namespace API
             {
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
+
             services.AddCors();
 
             services.AddIdentityCore<User>(opt =>
             {
                 opt.User.RequireUniqueEmail = true;
             })
-                .AddRoles<IdentityRole>()
+                .AddRoles<Role>()
                 .AddEntityFrameworkStores<StoreContext>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
                 {
