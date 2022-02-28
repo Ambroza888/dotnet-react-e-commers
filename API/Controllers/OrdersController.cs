@@ -49,7 +49,6 @@ namespace API.Controllers
             if (basket == null) return BadRequest(new ProblemDetails { Title = "Could not locate basket" });
 
             var items = new List<OrderItem>();
-
             foreach (var item in basket.Items)
             {
                 var productItem = await _context.Products.FindAsync(item.ProductId);
