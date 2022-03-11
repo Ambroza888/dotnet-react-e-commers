@@ -76,6 +76,7 @@ namespace API.Controllers
                 .ThenInclude(p => p.Product)
                 .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
         }
+        
         private string GetBuyerId()
         {
             return User.Identity?.Name ?? Request.Cookies["buyerId"];
