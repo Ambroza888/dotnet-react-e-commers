@@ -7,10 +7,11 @@ import Review from "./Review";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validationSchema } from "./checkoutValidation";
 import agent from "../../app/api/agent";
-import { useAppDispatch } from "../../app/store/configureStore";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { clearBasket } from "../basket/basketSlice";
 import { LoadingButton } from "@mui/lab";
 import { StripeElementType } from "@stripe/stripe-js";
+import { CardNumberElement, useElements, useStripe } from "@stripe/react-stripe-js";
 
 const steps = ['Shipping address', 'Review your order', 'Payment details'];
 
@@ -21,6 +22,11 @@ export default function CheckoutPage() {
     const dispatch = useAppDispatch();
     const [cardState, setCardState] = useState<{ elementError: {[key in StripeElementType]?: string }}>({ elementError: {} });
     const [cardComplete, setCardComplete] = useState<any>({ cardNumber: false, cardExpiry: false, cardCvs: false });
+    const [paymentMessage, setPaymentMessage] = useState('');
+    const [paymentSucceeded, setPaymentSucceeded] = useState(false);
+    const { basket } = useAppSelector(state => state.basket);
+    const stripe = useStripe();
+    const elements = useElements();
   
     const onCardInputChange = (event: any) => {
       setCardState({
@@ -62,20 +68,43 @@ export default function CheckoutPage() {
         })
     }, [methods])
 
-    const handleNext = async (data: FieldValues) => {
+    const submitOrder = async (data: FieldValues) => {
+        setLoading(true);
         const { nameOnCard, saveAddress, ...shippingAddress } = data;
-        if (activeStep === steps.length - 1) {
-            setLoading(true);
-            try {
+        if (!stripe || !elements) return; // stripe is not ready
+        try {
+            const cardElement = elements.getElement(CardNumberElement);
+            const paymentResult = await stripe.confirmCardPayment(basket?.clientSecret!, {
+                payment_method: {
+                    card: cardElement!,
+                    billing_details: {
+                        name: nameOnCard
+                    }
+                }
+            });
+            if (paymentResult.paymentIntent?.status === 'succeeded') {
                 const orderNumber = await agent.Orders.create({ saveAddress, shippingAddress });
                 setOrderNumber(orderNumber);
+                setPaymentSucceeded(true);
+                setPaymentMessage('Thank you - we have received your payment')
                 setActiveStep(activeStep + 1);
                 dispatch(clearBasket());
                 setLoading(false);
-            } catch (error) {
-                console.log(error);
+            } else {
+                setPaymentMessage(paymentResult.error?.message!);
+                setPaymentSucceeded(false);
                 setLoading(false);
+                setActiveStep(activeStep + 1);
             }
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    }
+
+    const handleNext = async (data: FieldValues) => {
+        if (activeStep === steps.length - 1) {
+            await submitOrder(data);
         } else {
             setActiveStep(activeStep + 1);
         }
@@ -113,13 +142,20 @@ export default function CheckoutPage() {
                     {activeStep === steps.length ? (
                         <>
                             <Typography variant="h5" gutterBottom>
-                                Thank you for your order.
+                                {paymentMessage}
                             </Typography>
-                            <Typography variant="subtitle1">
-                                Your order number is #{ orderNumber }. We have not emailed your order
-                                confirmation, and will not send you an update when your order has
-                                shipped as this is FAKE store!
-                            </Typography>
+                                {paymentSucceeded ? (
+                                    <Typography variant="subtitle1">
+                                        Your order number is #{ orderNumber }. We have not emailed your order
+                                        confirmation, and will not send you an update when your order has
+                                        shipped as this is FAKE store!
+                                    </Typography>
+                                ): (
+                                    <Button variant="contained" onClick={ handleBack }>
+                                        Go back an try again
+                                    </Button>
+                                )}
+               
                         </>
                     ) : (
                         <form onSubmit={ methods.handleSubmit(handleNext) }>
