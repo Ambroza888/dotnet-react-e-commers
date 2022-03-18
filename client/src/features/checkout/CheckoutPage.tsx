@@ -73,7 +73,8 @@ export default function CheckoutPage() {
         const { nameOnCard, saveAddress, ...shippingAddress } = data;
         if (!stripe || !elements) return; // stripe is not ready
         try {
-            const cardElement = elements.getElement(CardNumberElement);
+            // only CardNumber is fine, stripe js is smart enought to get all 3 fields for card
+            const cardElement = elements.getElement(CardNumberElement); 
             const paymentResult = await stripe.confirmCardPayment(basket?.clientSecret!, {
                 payment_method: {
                     card: cardElement!,
