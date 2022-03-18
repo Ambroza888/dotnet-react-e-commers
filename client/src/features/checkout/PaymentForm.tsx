@@ -82,6 +82,9 @@ export default function PaymentForm({ cardState, onCardInputChange } : Props) {
           />
         </Grid>
       </Grid>
+      <Typography>
+        Find cards number <a href='https://stripe.com/docs/testing#cards'>here</a>
+      </Typography>
     </>
   );
 }
