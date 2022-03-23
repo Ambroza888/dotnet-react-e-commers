@@ -1,1 +1,1 @@
-Live Application [here](https://e-commerce-winter-store.herokuapp.com/catalog).
+Live Application [here](https://e-commerce-winter-store.herokuapp.com/).
