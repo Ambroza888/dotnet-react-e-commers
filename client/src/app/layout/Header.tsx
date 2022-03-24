@@ -39,12 +39,12 @@ const navStyles = {
 };
 
 export default function Header({ darkMode, handleThemeChange }: Props) {
-  const { basket } = useAppSelector(state => state.basket);
-  const { user } = useAppSelector(state => state.account);
+  const { basket } = useAppSelector((state) => state.basket);
+  const { user } = useAppSelector((state) => state.account);
   const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <AppBar position="static" >
+    <AppBar position="static">
       <Toolbar
         sx={{
           display: "flex",
@@ -71,6 +71,11 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
               {title.toUpperCase()}
             </ListItem>
           ))}
+          {user && user.roles?.includes('Admin') && (
+            <ListItem component={NavLink} to={"/inventory"} sx={navStyles}>
+              INVENTORY
+            </ListItem>
+          )}
         </List>
 
         <Box display="flex" alignItems="center">
@@ -84,12 +89,17 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
               <ShoppingCart />
             </Badge>
           </IconButton>
-          { user ? (
-            <SignedInMenu/>
+          {user ? (
+            <SignedInMenu />
           ) : (
-              <List sx={{ display: "flex" }}>
+            <List sx={{ display: "flex" }}>
               {rightLinks.map(({ title, path }) => (
-                <ListItem component={NavLink} to={path} key={path} sx={navStyles}>
+                <ListItem
+                  component={NavLink}
+                  to={path}
+                  key={path}
+                  sx={navStyles}
+                >
                   {title.toUpperCase()}
                 </ListItem>
               ))}
